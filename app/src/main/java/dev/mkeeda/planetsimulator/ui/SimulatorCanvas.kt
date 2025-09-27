@@ -4,6 +4,8 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -15,6 +17,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import dev.mkeeda.planetsimulator.data.PresetManager
 import dev.mkeeda.planetsimulator.model.CelestialBody
 import dev.mkeeda.planetsimulator.simulation.OrbitalSimulator
 import dev.mkeeda.planetsimulator.util.CoordinateConverter
@@ -24,6 +27,8 @@ import kotlinx.coroutines.delay
 fun SimulatorCanvas() {
     val simulator = remember { OrbitalSimulator() }
     var isRunning by remember { mutableStateOf(true) }
+    var expandedPreset by remember { mutableStateOf(false) }
+    val presets = remember { PresetManager.getAllPresets() }
 
     LaunchedEffect(isRunning) {
         while (isRunning) {
@@ -56,6 +61,38 @@ fun SimulatorCanvas() {
                 }
             ) {
                 Text("Reset")
+            }
+
+            Box {
+                Button(
+                    onClick = { expandedPreset = true }
+                ) {
+                    Text(simulator.currentPreset.name)
+                }
+
+                DropdownMenu(
+                    expanded = expandedPreset,
+                    onDismissRequest = { expandedPreset = false }
+                ) {
+                    presets.forEach { preset ->
+                        DropdownMenuItem(
+                            text = {
+                                Column {
+                                    Text(preset.name)
+                                    Text(
+                                        preset.description,
+                                        style = androidx.compose.material3.MaterialTheme.typography.bodySmall,
+                                        color = Color.Gray
+                                    )
+                                }
+                            },
+                            onClick = {
+                                simulator.loadPreset(preset)
+                                expandedPreset = false
+                            }
+                        )
+                    }
+                }
             }
         }
 
