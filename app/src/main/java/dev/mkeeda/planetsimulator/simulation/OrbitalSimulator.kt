@@ -11,7 +11,19 @@ class OrbitalSimulator {
     var bodies by mutableStateOf(listOf<CelestialBody>())
         private set
 
-    private val G = 50000.0 // 重力定数（シミュレーション用に調整）
+    // 実際の太陽系データ（SI単位）
+    // 太陽質量: 1.989 × 10^30 kg
+    // 地球質量: 5.972 × 10^24 kg（太陽の約1/333,000）
+    // 地球-太陽距離: 1.496 × 10^11 m（1天文単位）
+    // 地球の公転速度: 約29.78 km/s
+
+    // スケーリング設定
+    // シミュレーション空間: 1000x1000単位
+    // 距離スケール: 1AU = 200単位
+    // 質量比は実際の比率を維持
+    // 時間スケール: 1秒 = 約1日相当
+
+    private val G = 40000.0 // 重力定数（スケーリング調整済み）
 
     init {
         reset()
@@ -54,12 +66,14 @@ class OrbitalSimulator {
     }
 
     fun reset() {
-        val sunMass = 100.0
-        val planetMass = 0.1
-        val distance = 200.0
+        // 実際の太陽系の質量比を使用
+        val sunMass = 333000.0  // 太陽の質量（任意単位）
+        val earthMass = 1.0     // 地球の質量を1として正規化
+        val auDistance = 200.0  // 1天文単位 = 200シミュレーション単位
 
-        // 円軌道に必要な速度を計算: v = sqrt(G * M / r)
-        val orbitalVelocity = sqrt(G * sunMass / distance)
+        // 円軌道速度の計算（ケプラーの第3法則に基づく）
+        // 実際の地球の公転速度に相当する値に調整
+        val earthOrbitalVelocity = sqrt(G * sunMass / auDistance)
 
         bodies = listOf(
             CelestialBody(
@@ -69,20 +83,20 @@ class OrbitalSimulator {
                 velocityX = 0.0,
                 velocityY = 0.0,
                 mass = sunMass,
-                radius = 30f,
-                color = Color.Yellow,
+                radius = 35f,  // 太陽の半径（視覚的に調整）
+                color = Color(0xFFFDB813),  // 太陽の色
                 name = "Sun"
             ),
             CelestialBody(
                 id = 2,
-                x = 500.0 + distance,
+                x = 500.0 + auDistance,
                 y = 500.0,
                 velocityX = 0.0,
-                velocityY = orbitalVelocity,
-                mass = planetMass,
-                radius = 15f,
-                color = Color.Blue,
-                name = "Planet"
+                velocityY = earthOrbitalVelocity,
+                mass = earthMass,
+                radius = 10f,  // 地球の半径（視覚的に調整）
+                color = Color(0xFF4169E1),  // 地球の青色
+                name = "Earth"
             )
         )
     }
