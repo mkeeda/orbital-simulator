@@ -26,9 +26,9 @@ class OrbitalSimulator {
         bodies = listOf(
             CelestialBody(
                 id = 1,
-                x = 400.0,
-                y = 400.0,
-                vx = 50.0,
+                x = 500.0,
+                y = 500.0,
+                vx = 0.0,
                 vy = 0.0,
                 mass = 1.0,
                 radius = 30f,
@@ -37,8 +37,8 @@ class OrbitalSimulator {
             ),
             CelestialBody(
                 id = 2,
-                x = 600.0,
-                y = 400.0,
+                x = 700.0,
+                y = 500.0,
                 vx = 0.0,
                 vy = 30.0,
                 mass = 0.1,
