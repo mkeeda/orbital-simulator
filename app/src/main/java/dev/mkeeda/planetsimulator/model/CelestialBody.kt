@@ -3,7 +3,6 @@ package dev.mkeeda.planetsimulator.model
 import androidx.compose.ui.graphics.Color
 
 data class CelestialBody(
-    val id: Int,
     val x: Double,
     val y: Double,
     val velocityX: Double,
@@ -11,7 +10,9 @@ data class CelestialBody(
     val mass: Double = 1.0,
     val radius: Float = 20f,
     val color: Color = Color.Blue,
-    val name: String = "Body"
+    val name: String = "Body",
+    val density: Double = 1.0, // g/cm³相当の密度（ロシュ限界計算用）
+    val isDebris: Boolean = false // デブリは崩壊しない
 ) {
     fun updatePosition(deltaTime: Double): CelestialBody {
         return copy(

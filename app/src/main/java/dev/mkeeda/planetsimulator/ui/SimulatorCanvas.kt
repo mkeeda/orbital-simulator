@@ -42,10 +42,11 @@ fun SimulatorCanvas() {
             .fillMaxSize()
             .background(Color.Black)
     ) {
+        // 上段のコントロール
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(horizontal = 16.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -96,6 +97,27 @@ fun SimulatorCanvas() {
             }
         }
 
+        // 下段のロシュ限界コントロール
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 4.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("ロシュ限界:", color = Color.White)
+                Spacer(modifier = Modifier.width(8.dp))
+                Switch(
+                    checked = simulator.isRocheLimitEnabled,
+                    onCheckedChange = { simulator.toggleRocheLimit() }
+                )
+            }
+
+        }
+
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
@@ -141,6 +163,7 @@ private fun DrawScope.drawCelestialBody(body: CelestialBody, converter: Coordina
     val screenPos = converter.simToScreen(body.x, body.y)
     val screenRadius = converter.scaleToScreen(body.radius.toDouble())
 
+    // 全ての天体を同じ方法で描画
     drawCircle(
         color = body.color,
         radius = screenRadius,

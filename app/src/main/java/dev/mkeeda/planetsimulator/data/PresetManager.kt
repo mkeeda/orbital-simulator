@@ -1,6 +1,11 @@
 package dev.mkeeda.planetsimulator.data
 
 import androidx.compose.ui.graphics.Color
+import dev.mkeeda.planetsimulator.data.PresetManager.getBinaryStarPreset
+import dev.mkeeda.planetsimulator.data.PresetManager.getEllipticalOrbitPreset
+import dev.mkeeda.planetsimulator.data.PresetManager.getSunEarthPreset
+import dev.mkeeda.planetsimulator.data.PresetManager.getThreeBodyPreset
+import dev.mkeeda.planetsimulator.data.PresetManager.getTidalDisruptionPreset
 import dev.mkeeda.planetsimulator.model.CelestialBody
 import dev.mkeeda.planetsimulator.model.SimulationPreset
 import kotlin.math.sqrt
@@ -20,7 +25,6 @@ object PresetManager {
             gravityConstant = g,
             bodies = listOf(
                 CelestialBody(
-                    id = 1,
                     name = "Sun",
                     x = 500.0,
                     y = 500.0,
@@ -28,10 +32,10 @@ object PresetManager {
                     velocityY = 0.0,
                     mass = sunMass,
                     radius = 35f,
-                    color = Color(0xFFFDB813)
+                    color = Color(0xFFFDB813),
+                    density = 1.4 // 太陽の密度
                 ),
                 CelestialBody(
-                    id = 2,
                     name = "Earth",
                     x = 500.0 + auDistance,
                     y = 500.0,
@@ -39,7 +43,8 @@ object PresetManager {
                     velocityY = earthOrbitalVelocity,
                     mass = earthMass,
                     radius = 10f,
-                    color = Color(0xFF4169E1)
+                    color = Color(0xFF4169E1),
+                    density = 5.5 // 地球の密度
                 )
             )
         )
@@ -57,7 +62,6 @@ object PresetManager {
             gravityConstant = g,
             bodies = listOf(
                 CelestialBody(
-                    id = 1,
                     name = "Star A",
                     x = 500.0 - distance / 2,
                     y = 500.0,
@@ -65,10 +69,10 @@ object PresetManager {
                     velocityY = velocity,
                     mass = mass,
                     radius = 25f,
-                    color = Color(0xFFFFD700)
+                    color = Color(0xFFFFD700),
+                    density = 1.0
                 ),
                 CelestialBody(
-                    id = 2,
                     name = "Star B",
                     x = 500.0 + distance / 2,
                     y = 500.0,
@@ -76,7 +80,8 @@ object PresetManager {
                     velocityY = -velocity,
                     mass = mass,
                     radius = 25f,
-                    color = Color(0xFFFFA500)
+                    color = Color(0xFFFFA500),
+                    density = 1.0
                 )
             )
         )
@@ -101,7 +106,6 @@ object PresetManager {
             gravityConstant = g,
             bodies = listOf(
                 CelestialBody(
-                    id = 1,
                     name = "Star 1",
                     x = 500.0 - separation / 3,
                     y = 500.0 - separation / 4,
@@ -109,10 +113,10 @@ object PresetManager {
                     velocityY = 12.0,
                     mass = mass1,
                     radius = 20f,
-                    color = Color(0xFFFFD700)
+                    color = Color(0xFFFFD700),
+                    density = 0.8
                 ),
                 CelestialBody(
-                    id = 2,
                     name = "Star 2",
                     x = 500.0 + separation / 3,
                     y = 500.0 - separation / 4,
@@ -120,10 +124,10 @@ object PresetManager {
                     velocityY = -12.0,
                     mass = mass2,
                     radius = 20f,
-                    color = Color(0xFF00CED1)
+                    color = Color(0xFF00CED1),
+                    density = 0.8
                 ),
                 CelestialBody(
-                    id = 3,
                     name = "Star 3",
                     x = 500.0,
                     y = 500.0 + separation / 2,
@@ -131,7 +135,8 @@ object PresetManager {
                     velocityY = 0.0,
                     mass = mass3,
                     radius = 20f,
-                    color = Color(0xFFFF69B4)
+                    color = Color(0xFFFF69B4),
+                    density = 0.8
                 )
             )
         )
@@ -153,7 +158,6 @@ object PresetManager {
             gravityConstant = g,
             bodies = listOf(
                 CelestialBody(
-                    id = 1,
                     name = "Sun",
                     x = 500.0,
                     y = 500.0,
@@ -161,10 +165,10 @@ object PresetManager {
                     velocityY = 0.0,
                     mass = sunMass,
                     radius = 30f,
-                    color = Color(0xFFFFA500)
+                    color = Color(0xFFFFA500),
+                    density = 1.4
                 ),
                 CelestialBody(
-                    id = 2,
                     name = "Planet",
                     x = 500.0 + perihelion,
                     y = 500.0,
@@ -172,7 +176,67 @@ object PresetManager {
                     velocityY = velocity,
                     mass = planetMass,
                     radius = 10f,
-                    color = Color(0xFF8A2BE2)
+                    color = Color(0xFF8A2BE2),
+                    density = 3.0
+                )
+            )
+        )
+    }
+
+    fun getTidalDisruptionPreset(): SimulationPreset {
+        val blackHoleMass = 500.0
+        val starMass = 20.0
+        val cometMass = 0.5
+        val g = 35000.0
+
+        return SimulationPreset(
+            name = "潮汐破壊",
+            description = "ブラックホール級の天体による複数天体の破壊",
+            gravityConstant = g,
+            bodies = listOf(
+                CelestialBody(
+                    name = "Black Hole",
+                    x = 500.0,
+                    y = 500.0,
+                    velocityX = 0.0,
+                    velocityY = 0.0,
+                    mass = blackHoleMass,
+                    radius = 25f,
+                    color = Color(0xFF1C1C1C),
+                    density = 10.0 // 超高密度
+                ),
+                CelestialBody(
+                    name = "Red Star",
+                    x = 650.0,
+                    y = 500.0,
+                    velocityX = -5.0,
+                    velocityY = sqrt(g * blackHoleMass / 150.0) * 0.9,
+                    mass = starMass,
+                    radius = 20f,
+                    color = Color(0xFFDC143C),
+                    density = 0.8
+                ),
+                CelestialBody(
+                    name = "Blue Star",
+                    x = 350.0,
+                    y = 500.0,
+                    velocityX = 5.0,
+                    velocityY = -sqrt(g * blackHoleMass / 150.0) * 0.9,
+                    mass = starMass,
+                    radius = 20f,
+                    color = Color(0xFF4682B4),
+                    density = 0.8
+                ),
+                CelestialBody(
+                    name = "Comet",
+                    x = 500.0,
+                    y = 380.0,
+                    velocityX = sqrt(g * blackHoleMass / 120.0) * 0.85,
+                    velocityY = 0.0,
+                    mass = cometMass,
+                    radius = 8f,
+                    color = Color(0xFFF0E68C),
+                    density = 0.3 // 非常に低密度
                 )
             )
         )
@@ -183,7 +247,8 @@ object PresetManager {
             getSunEarthPreset(),
             getBinaryStarPreset(),
             getThreeBodyPreset(),
-            getEllipticalOrbitPreset()
+            getEllipticalOrbitPreset(),
+            getTidalDisruptionPreset(),
         )
     }
 }
