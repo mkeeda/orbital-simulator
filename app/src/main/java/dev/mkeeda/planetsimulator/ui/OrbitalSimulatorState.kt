@@ -1,20 +1,19 @@
-package dev.mkeeda.planetsimulator.simulation
+package dev.mkeeda.planetsimulator.ui
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import dev.mkeeda.planetsimulator.data.PresetManager
+import dev.mkeeda.planetsimulator.data.Preset
 import dev.mkeeda.planetsimulator.model.CelestialBody
 import dev.mkeeda.planetsimulator.model.SimulationPreset
-import dev.mkeeda.planetsimulator.physics.RocheLimit
-import dev.mkeeda.planetsimulator.physics.StellarCollapse
+import dev.mkeeda.planetsimulator.physics.RocheLimitPhysics
 import kotlin.math.sqrt
 
-class OrbitalSimulator {
+class OrbitalSimulatorState {
     var bodies by mutableStateOf(listOf<CelestialBody>())
         private set
 
-    var currentPreset by mutableStateOf(PresetManager.getSunEarthPreset())
+    var currentPreset by mutableStateOf(Preset.realSunAndEarth())
         private set
 
     var isRocheLimitEnabled by mutableStateOf(true)
@@ -82,44 +81,6 @@ class OrbitalSimulator {
      * ロシュ限界チェックと崩壊処理
      */
     private fun checkRocheLimitAndCollapse() {
-        val bodiesToRemove = mutableSetOf<CelestialBody>()
-        val debrisToAdd = mutableListOf<CelestialBody>()
-
-        // 全ての天体ペアをチェック
-        for (i in bodies.indices) {
-            if (bodies[i] in bodiesToRemove) continue
-
-            for (j in i + 1 until bodies.size) {
-                if (bodies[j] in bodiesToRemove) continue
-
-                val body1 = bodies[i]
-                val body2 = bodies[j]
-
-                // ロシュ限界チェック
-                if (RocheLimit.isWithinRocheLimit(body1, body2)) {
-                    val victim = RocheLimit.getVictimBody(body1, body2)
-                    val primary = RocheLimit.getPrimaryBody(body1, body2)
-
-                    // 崩壊条件チェック（相対速度など）
-                    if (StellarCollapse.shouldCollapse(victim, primary)) {
-                        // デブリ生成
-                        val debris = StellarCollapse.createDebris(victim, primary)
-                        debrisToAdd.addAll(debris)
-
-                        // 破壊される天体をマーク
-                        bodiesToRemove.add(victim)
-
-                    }
-                }
-            }
-        }
-
-        // 破壊された天体を除去し、デブリを追加
-        if (bodiesToRemove.isNotEmpty() || debrisToAdd.isNotEmpty()) {
-            val updatedBodies = bodies.toMutableList()
-            updatedBodies.removeAll(bodiesToRemove)
-            updatedBodies.addAll(debrisToAdd)
-            bodies = updatedBodies
-        }
+        bodies = RocheLimitPhysics.processCollisions(bodies)
     }
 }

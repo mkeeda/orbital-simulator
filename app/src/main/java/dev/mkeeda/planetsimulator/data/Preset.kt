@@ -1,18 +1,13 @@
 package dev.mkeeda.planetsimulator.data
 
 import androidx.compose.ui.graphics.Color
-import dev.mkeeda.planetsimulator.data.PresetManager.getBinaryStarPreset
-import dev.mkeeda.planetsimulator.data.PresetManager.getEllipticalOrbitPreset
-import dev.mkeeda.planetsimulator.data.PresetManager.getSunEarthPreset
-import dev.mkeeda.planetsimulator.data.PresetManager.getThreeBodyPreset
-import dev.mkeeda.planetsimulator.data.PresetManager.getTidalDisruptionPreset
 import dev.mkeeda.planetsimulator.model.CelestialBody
 import dev.mkeeda.planetsimulator.model.SimulationPreset
 import kotlin.math.sqrt
 
-object PresetManager {
+object Preset {
 
-    fun getSunEarthPreset(): SimulationPreset {
+    fun realSunAndEarth(): SimulationPreset {
         val sunMass = 333000.0
         val earthMass = 1.0
         val auDistance = 200.0
@@ -50,7 +45,7 @@ object PresetManager {
         )
     }
 
-    fun getBinaryStarPreset(): SimulationPreset {
+    fun binaryStar(): SimulationPreset {
         val mass = 100.0
         val distance = 150.0
         val g = 50000.0
@@ -87,7 +82,7 @@ object PresetManager {
         )
     }
 
-    fun getThreeBodyPreset(): SimulationPreset {
+    fun threeBody(): SimulationPreset {
         // Sitnikov問題をベースにした安定な3体問題
         // 2つの同質量天体が楕円軌道で動き、3つ目が振動運動
         val mass1 = 50.0
@@ -142,7 +137,7 @@ object PresetManager {
         )
     }
 
-    fun getEllipticalOrbitPreset(): SimulationPreset {
+    fun ellipticalOrbit(): SimulationPreset {
         val sunMass = 300.0
         val planetMass = 1.0
         val g = 40000.0
@@ -183,7 +178,7 @@ object PresetManager {
         )
     }
 
-    fun getTidalDisruptionPreset(): SimulationPreset {
+    fun tidalDisruption(): SimulationPreset {
         val blackHoleMass = 500.0
         val starMass = 20.0
         val cometMass = 0.5
@@ -244,11 +239,11 @@ object PresetManager {
 
     fun getAllPresets(): List<SimulationPreset> {
         return listOf(
-            getSunEarthPreset(),
-            getBinaryStarPreset(),
-            getThreeBodyPreset(),
-            getEllipticalOrbitPreset(),
-            getTidalDisruptionPreset(),
+            realSunAndEarth(),
+            binaryStar(),
+            threeBody(),
+            ellipticalOrbit(),
+            tidalDisruption(),
         )
     }
 }
