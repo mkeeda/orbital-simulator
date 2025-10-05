@@ -1,8 +1,8 @@
-package dev.mkeeda.planetsimulator.data
+package dev.mkeeda.orbitalSimulator.data
 
 import androidx.compose.ui.graphics.Color
-import dev.mkeeda.planetsimulator.model.CelestialBody
-import dev.mkeeda.planetsimulator.model.SimulationPreset
+import dev.mkeeda.orbitalSimulator.model.CelestialBody
+import dev.mkeeda.orbitalSimulator.model.SimulationPreset
 import kotlin.math.sqrt
 
 object Preset {

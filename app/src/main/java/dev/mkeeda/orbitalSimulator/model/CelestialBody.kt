@@ -1,4 +1,4 @@
-package dev.mkeeda.planetsimulator.model
+package dev.mkeeda.orbitalSimulator.model
 
 import androidx.compose.ui.graphics.Color
 import kotlin.math.*

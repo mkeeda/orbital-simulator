@@ -1,14 +1,14 @@
-package dev.mkeeda.planetsimulator.ui
+package dev.mkeeda.orbitalSimulator.ui
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import dev.mkeeda.planetsimulator.data.Preset
-import dev.mkeeda.planetsimulator.model.CelestialBody
-import dev.mkeeda.planetsimulator.model.SimulationPreset
-import dev.mkeeda.planetsimulator.model.Trail
-import dev.mkeeda.planetsimulator.model.TrailPoint
-import dev.mkeeda.planetsimulator.physics.RocheLimitPhysics
+import dev.mkeeda.orbitalSimulator.data.Preset
+import dev.mkeeda.orbitalSimulator.model.CelestialBody
+import dev.mkeeda.orbitalSimulator.model.SimulationPreset
+import dev.mkeeda.orbitalSimulator.model.Trail
+import dev.mkeeda.orbitalSimulator.model.TrailPoint
+import dev.mkeeda.orbitalSimulator.physics.RocheLimitPhysics
 import kotlin.math.sqrt
 
 class OrbitalSimulatorState {

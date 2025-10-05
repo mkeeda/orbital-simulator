@@ -1,4 +1,4 @@
-package dev.mkeeda.planetsimulator.ui
+package dev.mkeeda.orbitalSimulator.ui
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -16,11 +16,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import dev.mkeeda.planetsimulator.data.Preset
-import dev.mkeeda.planetsimulator.model.CelestialBody
-import dev.mkeeda.planetsimulator.model.SimulationPreset
-import dev.mkeeda.planetsimulator.model.Trail
-import dev.mkeeda.planetsimulator.util.CoordinateConverter
+import dev.mkeeda.orbitalSimulator.data.Preset
+import dev.mkeeda.orbitalSimulator.model.CelestialBody
+import dev.mkeeda.orbitalSimulator.model.SimulationPreset
+import dev.mkeeda.orbitalSimulator.model.Trail
+import dev.mkeeda.orbitalSimulator.util.CoordinateConverter
 import kotlinx.coroutines.delay
 
 @Composable
@@ -205,7 +205,7 @@ private fun SimulationCanvas(
 ) {
     Canvas(modifier = modifier) {
         val converter = CoordinateConverter(canvasSize = size)
-        drawBackground(converter)
+//        drawBackground(converter)
 
         trails.forEach { trail ->
             drawTrail(trail, converter)

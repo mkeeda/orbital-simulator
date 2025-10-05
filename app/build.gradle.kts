@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "dev.mkeeda.planetsimulator"
+    namespace = "dev.mkeeda.orbitalSimulator"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "dev.mkeeda.planetsimulator"
+        applicationId = "dev.mkeeda.orbitalSimulator"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

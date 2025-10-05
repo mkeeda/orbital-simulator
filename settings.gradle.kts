@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Planet simulator"
+rootProject.name = "Orbital simulator"
 include(":app")

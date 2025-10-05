@@ -1,4 +1,4 @@
-package dev.mkeeda.planetsimulator.ui.theme
+package dev.mkeeda.orbitalSimulator.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

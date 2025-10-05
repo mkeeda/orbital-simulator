@@ -1,6 +1,6 @@
-package dev.mkeeda.planetsimulator.physics
+package dev.mkeeda.orbitalSimulator.physics
 
-import dev.mkeeda.planetsimulator.model.CelestialBody
+import dev.mkeeda.orbitalSimulator.model.CelestialBody
 
 /**
  * ロシュ限界の物理計算を統合したユーティリティ

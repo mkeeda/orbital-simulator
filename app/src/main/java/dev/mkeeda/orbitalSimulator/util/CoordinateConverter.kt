@@ -1,4 +1,4 @@
-package dev.mkeeda.planetsimulator.util
+package dev.mkeeda.orbitalSimulator.util
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size

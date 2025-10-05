@@ -1,4 +1,4 @@
-package dev.mkeeda.planetsimulator.model
+package dev.mkeeda.orbitalSimulator.model
 
 data class SimulationPreset(
     val name: String,
