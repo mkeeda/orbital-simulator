@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import dev.mkeeda.planetsimulator.data.Preset
 import dev.mkeeda.planetsimulator.model.CelestialBody
 import dev.mkeeda.planetsimulator.model.SimulationPreset
+import dev.mkeeda.planetsimulator.model.Trail
 import dev.mkeeda.planetsimulator.util.CoordinateConverter
 import kotlinx.coroutines.delay
 
@@ -29,7 +30,7 @@ fun OrbitalSimulator() {
 
     LaunchedEffect(isRunning) {
         while (isRunning) {
-            simulator.update(0.016)
+            simulator.update(deltaTime = 0.016)
             delay(16L)
         }
     }
@@ -47,13 +48,16 @@ fun OrbitalSimulator() {
             onPresetSelected = { preset -> simulator.loadPreset(preset) }
         )
 
-        RocheLimitControls(
-            isEnabled = simulator.isRocheLimitEnabled,
-            onToggle = { simulator.toggleRocheLimit() }
+        SimulationSettingsControls(
+            isRocheLimitEnabled = simulator.isRocheLimitEnabled,
+            onRocheLimitToggle = { simulator.toggleRocheLimit() },
+            isTrailEnabled = simulator.isTrailEnabled,
+            onTrailToggle = { simulator.toggleTrail() }
         )
 
         SimulationCanvas(
             bodies = simulator.bodies,
+            trails = simulator.trails.values.toList(),
             modifier = Modifier
                 .fillMaxSize()
                 .weight(1f)
@@ -156,9 +160,11 @@ private fun PresetMenuItem(preset: SimulationPreset) {
 }
 
 @Composable
-private fun RocheLimitControls(
-    isEnabled: Boolean,
-    onToggle: () -> Unit
+private fun SimulationSettingsControls(
+    isRocheLimitEnabled: Boolean,
+    onRocheLimitToggle: () -> Unit,
+    isTrailEnabled: Boolean,
+    onTrailToggle: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -173,8 +179,19 @@ private fun RocheLimitControls(
             Text("ロシュ限界:", color = Color.White)
             Spacer(modifier = Modifier.width(8.dp))
             Switch(
-                checked = isEnabled,
-                onCheckedChange = { onToggle() }
+                checked = isRocheLimitEnabled,
+                onCheckedChange = { onRocheLimitToggle() }
+            )
+        }
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("軌跡:", color = Color.White)
+            Spacer(modifier = Modifier.width(8.dp))
+            Switch(
+                checked = isTrailEnabled,
+                onCheckedChange = { onTrailToggle() }
             )
         }
     }
@@ -183,11 +200,17 @@ private fun RocheLimitControls(
 @Composable
 private fun SimulationCanvas(
     bodies: List<CelestialBody>,
+    trails: List<Trail>,
     modifier: Modifier = Modifier
 ) {
     Canvas(modifier = modifier) {
         val converter = CoordinateConverter(canvasSize = size)
         drawBackground(converter)
+
+        trails.forEach { trail ->
+            drawTrail(trail, converter)
+        }
+
         bodies.forEach { body ->
             drawCelestialBody(body, converter)
         }
@@ -236,6 +259,24 @@ private fun DrawScope.drawCelestialBody(body: CelestialBody, converter: Coordina
         radius = screenRadius * 1.5f,
         center = screenPos
     )
+}
+
+private fun DrawScope.drawTrail(trail: Trail, converter: CoordinateConverter) {
+    if (trail.positions.size < 2) return
+
+    val points = trail.positions.map { point ->
+        converter.simToScreen(x = point.x, y = point.y)
+    }
+
+    for (i in 1 until points.size) {
+        val alpha = (i.toFloat() / points.size) * 0.5f  // 古い位置ほど薄く
+        drawLine(
+            color = trail.color.copy(alpha = alpha),
+            start = points[i - 1],
+            end = points[i],
+            strokeWidth = 5f
+        )
+    }
 }
 
 @Preview(device = "spec:width=1280dp,height=800dp,dpi=240")

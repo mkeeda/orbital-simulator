@@ -6,11 +6,19 @@ import androidx.compose.runtime.setValue
 import dev.mkeeda.planetsimulator.data.Preset
 import dev.mkeeda.planetsimulator.model.CelestialBody
 import dev.mkeeda.planetsimulator.model.SimulationPreset
+import dev.mkeeda.planetsimulator.model.Trail
+import dev.mkeeda.planetsimulator.model.TrailPoint
 import dev.mkeeda.planetsimulator.physics.RocheLimitPhysics
 import kotlin.math.sqrt
 
 class OrbitalSimulatorState {
     var bodies by mutableStateOf(listOf<CelestialBody>())
+        private set
+
+    var trails by mutableStateOf(mapOf<String, Trail>())
+        private set
+
+    var isTrailEnabled by mutableStateOf(true)
         private set
 
     var currentPreset by mutableStateOf(Preset.realSunAndEarth())
@@ -61,12 +69,18 @@ class OrbitalSimulatorState {
 
         // 位置を更新
         bodies = updatedBodies.map { it.updatePosition(deltaTime) }
+
+        // 軌跡を更新
+        if (isTrailEnabled) {
+            updateTrails()
+        }
     }
 
     fun loadPreset(preset: SimulationPreset) {
         currentPreset = preset
         gravityConstant = preset.gravityConstant
         bodies = preset.bodies
+        initializeTrails()
     }
 
     fun reset() {
@@ -77,10 +91,69 @@ class OrbitalSimulatorState {
         isRocheLimitEnabled = !isRocheLimitEnabled
     }
 
+    fun toggleTrail() {
+        isTrailEnabled = !isTrailEnabled
+        if (!isTrailEnabled) {
+            clearTrails()
+        }
+    }
+
     /**
      * ロシュ限界チェックと崩壊処理
      */
     private fun checkRocheLimitAndCollapse() {
+        val previousBodies = bodies
         bodies = RocheLimitPhysics.processCollisions(bodies)
+
+        // デブリが生成された場合は軌跡を削除
+        if (bodies.size != previousBodies.size) {
+            val currentBodyNames = bodies.map { it.name }.toSet()
+            val removedNames = previousBodies.map { it.name }.filterNot { it in currentBodyNames }
+
+            val updatedTrails = trails.toMutableMap()
+            removedNames.forEach { updatedTrails.remove(it) }
+            trails = updatedTrails
+        }
+    }
+
+    private fun initializeTrails() {
+        val newTrails = mutableMapOf<String, Trail>()
+        bodies.forEach { body ->
+            if (!body.isDebris) {  // デブリは軌跡を記録しない
+                newTrails[body.name] = Trail(
+                    bodyName = body.name,
+                    positions = emptyList(),
+                    color = body.color.copy(alpha = 0.5f)
+                )
+            }
+        }
+        trails = newTrails
+    }
+
+    private fun updateTrails() {
+        val updatedTrails = trails.toMutableMap()
+
+        bodies.forEach { body ->
+            if (!body.isDebris) {  // デブリは軌跡を記録しない
+                val trail = updatedTrails[body.name]
+                if (trail != null) {
+                    updatedTrails[body.name] = trail.addPosition(body.x, body.y)
+                } else {
+                    // 新しい天体の場合（ありえないが念のため）
+                    updatedTrails[body.name] = Trail(
+                        bodyName = body.name,
+                        positions = listOf(TrailPoint(body.x, body.y)),
+                        color = body.color.copy(alpha = 0.5f)
+                    )
+                }
+            }
+        }
+
+        trails = updatedTrails
+    }
+
+    private fun clearTrails() {
+        val clearedTrails = trails.mapValues { it.value.clear() }
+        trails = clearedTrails
     }
 }
