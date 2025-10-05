@@ -30,7 +30,7 @@ fun OrbitalSimulator() {
 
     LaunchedEffect(isRunning) {
         while (isRunning) {
-            simulator.update(deltaTime = 0.016)
+            simulator.update(deltaTime = 0.016f)
             delay(16L)
         }
     }
@@ -221,9 +221,9 @@ private fun DrawScope.drawBackground(converter: CoordinateConverter) {
     val gridSize = 50
     val gridColor = Color.Black.copy(alpha = 0.6f)
 
-    for (x in 0..CoordinateConverter.SIMULATION_WIDTH step gridSize) {
-        val start = converter.simToScreen(x = x.toDouble(), y = 0.0)
-        val end = converter.simToScreen(x = x.toDouble(), y = 1000.0)
+    for (x in 0..CoordinateConverter.SIMULATION_WIDTH.toInt() step gridSize) {
+        val start = converter.simToScreen(x = x.toFloat(), y = 0.0f)
+        val end = converter.simToScreen(x = x.toFloat(), y = 1000.0f)
         drawLine(
             color = gridColor,
             start = start,
@@ -232,9 +232,9 @@ private fun DrawScope.drawBackground(converter: CoordinateConverter) {
         )
     }
 
-    for (y in 0..CoordinateConverter.SIMULATION_HEIGHT step gridSize) {
-        val start = converter.simToScreen(0.0, y.toDouble())
-        val end = converter.simToScreen(1000.0, y.toDouble())
+    for (y in 0..CoordinateConverter.SIMULATION_HEIGHT.toInt() step gridSize) {
+        val start = converter.simToScreen(0.0f, y.toFloat())
+        val end = converter.simToScreen(1000.0f, y.toFloat())
         drawLine(
             color = gridColor,
             start = start,
@@ -246,7 +246,7 @@ private fun DrawScope.drawBackground(converter: CoordinateConverter) {
 
 private fun DrawScope.drawCelestialBody(body: CelestialBody, converter: CoordinateConverter) {
     val screenPos = converter.simToScreen(x = body.x, y = body.y)
-    val screenRadius = converter.scaleToScreen(body.radius.toDouble())
+    val screenRadius = converter.scaleToScreen(body.radius)
 
     drawCircle(
         color = body.color,

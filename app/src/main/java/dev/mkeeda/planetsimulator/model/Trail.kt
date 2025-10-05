@@ -11,7 +11,7 @@ data class Trail(
     val color: Color,
     val maxLength: Int = 200  // 軌跡の最大長
 ) {
-    fun addPosition(x: Double, y: Double): Trail {
+    fun addPosition(x: Float, y: Float): Trail {
         val newPoint = TrailPoint(x, y)
         val updatedPositions = (positions + newPoint).takeLast(maxLength)
         return copy(positions = updatedPositions)
@@ -26,6 +26,6 @@ data class Trail(
  * 軌跡の各点
  */
 data class TrailPoint(
-    val x: Double,
-    val y: Double
+    val x: Float,
+    val y: Float
 )

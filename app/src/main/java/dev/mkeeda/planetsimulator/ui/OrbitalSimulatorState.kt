@@ -28,13 +28,13 @@ class OrbitalSimulatorState {
         private set
 
 
-    private var gravityConstant = 40000.0
+    private var gravityConstant = 40000.0f
 
     init {
         loadPreset(currentPreset)
     }
 
-    fun update(deltaTime: Double) {
+    fun update(deltaTime: Float) {
         // ロシュ限界チェックと崩壊処理
         if (isRocheLimitEnabled) {
             checkRocheLimitAndCollapse()
@@ -45,8 +45,8 @@ class OrbitalSimulatorState {
 
         for (i in bodies.indices) {
 
-            var fx = 0.0
-            var fy = 0.0
+            var fx = 0.0f
+            var fy = 0.0f
 
             // 他のすべての天体からの重力を計算
             for (j in bodies.indices) {

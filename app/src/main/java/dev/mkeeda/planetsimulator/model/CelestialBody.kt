@@ -6,24 +6,24 @@ import kotlin.random.Random
 
 data class CelestialBody(
     val name: String = "Body",
-    val x: Double,
-    val y: Double,
-    val velocityX: Double,
-    val velocityY: Double,
-    val mass: Double = 1.0,
+    val x: Float,
+    val y: Float,
+    val velocityX: Float,
+    val velocityY: Float,
+    val mass: Float = 1.0f,
     val radius: Float = 20f,
     val color: Color = Color.Blue,
-    val density: Double = 1.0, // g/cm³相当の密度（ロシュ限界計算用）
+    val density: Float = 1.0f, // g/cm³相当の密度（ロシュ限界計算用）
     val isDebris: Boolean = false // デブリは崩壊しない
 ) {
-    fun updatePosition(deltaTime: Double): CelestialBody {
+    fun updatePosition(deltaTime: Float): CelestialBody {
         return copy(
             x = x + velocityX * deltaTime,
             y = y + velocityY * deltaTime
         )
     }
 
-    fun applyForce(fx: Double, fy: Double, deltaTime: Double): CelestialBody {
+    fun applyForce(fx: Float, fy: Float, deltaTime: Float): CelestialBody {
         // 加速度を計算 a = f * m
         // 加速度から速度vを計算 v = a * t
         return copy(
@@ -32,13 +32,13 @@ data class CelestialBody(
         )
     }
 
-    fun distanceTo(other: CelestialBody): Double {
+    fun distanceTo(other: CelestialBody): Float {
         val dx = x - other.x
         val dy = y - other.y
         return sqrt(dx * dx + dy * dy)
     }
 
-    fun relativeVelocityTo(other: CelestialBody): Double {
+    fun relativeVelocityTo(other: CelestialBody): Float {
         val relativeVx = velocityX - other.velocityX
         val relativeVy = velocityY - other.velocityY
         return sqrt(relativeVx * relativeVx + relativeVy * relativeVy)
@@ -53,17 +53,17 @@ data class CelestialBody(
         val distance = distanceTo(other)
 
         // 距離がロシュ限界内で、相対速度が低い場合のみ崩壊
-        return distance < rocheDistance && relativeVelocityTo(other) < 100.0
+        return distance < rocheDistance && relativeVelocityTo(other) < 100.0f
     }
 
-    fun calculateRocheDistance(other: CelestialBody): Double {
+    fun calculateRocheDistance(other: CelestialBody): Float {
         val primary = if (mass > other.mass) this else other
         val satellite = if (mass > other.mass) other else this
 
         val densityRatio = primary.density / satellite.density
-        val rocheCoefficient = 3.0
+        val rocheCoefficient = 3.0f
 
-        return rocheCoefficient * primary.radius * densityRatio.pow(1.0/3.0)
+        return rocheCoefficient * primary.radius * densityRatio.pow(1.0f/3.0f)
     }
 
     fun createDebrisFrom(primary: CelestialBody): List<CelestialBody> {
@@ -76,8 +76,8 @@ data class CelestialBody(
         val distance = distanceTo(primary)
 
         // 正規化された逃避方向
-        val escapeX = if (distance > 0) dx / distance else 1.0
-        val escapeY = if (distance > 0) dy / distance else 0.0
+        val escapeX = if (distance > 0) dx / distance else 1.0f
+        val escapeY = if (distance > 0) dy / distance else 0.0f
 
         // 各デブリの質量と大きさ
         val debrisMass = mass / debrisCount
@@ -86,25 +86,25 @@ data class CelestialBody(
         repeat(debrisCount) { i ->
             // 円周上にデブリを配置するための角度
             val angle = (2 * PI * i) / debrisCount
-            val spreadRadius = radius * 0.8
+            val spreadRadius = radius * 0.8f
 
             // デブリの初期位置
-            val debrisX = x + cos(angle) * spreadRadius
-            val debrisY = y + sin(angle) * spreadRadius
+            val debrisX = x + cos(angle).toFloat() * spreadRadius
+            val debrisY = y + sin(angle).toFloat() * spreadRadius
 
             // デブリの速度を計算
-            val baseSpeed = Random.nextDouble(20.0, 50.0)
-            val escapeComponent = Random.nextDouble(0.6, 1.0)
+            val baseSpeed = Random.nextDouble(20.0, 50.0).toFloat()
+            val escapeComponent = Random.nextDouble(0.6, 1.0).toFloat()
             val randomAngle = Random.nextDouble(0.0, 2 * PI)
-            val randomComponent = 1.0 - escapeComponent
+            val randomComponent = 1.0f - escapeComponent
 
             val newVelocityX = velocityX + baseSpeed * (
                 escapeComponent * escapeX +
-                randomComponent * cos(randomAngle)
+                randomComponent * cos(randomAngle).toFloat()
             )
             val newVelocityY = velocityY + baseSpeed * (
                 escapeComponent * escapeY +
-                randomComponent * sin(randomAngle)
+                randomComponent * sin(randomAngle).toFloat()
             )
 
             // デブリの色を生成
