@@ -38,7 +38,7 @@ fun OrbitalSimulator() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(Color.White)
     ) {
         SimulationControls(
             isRunning = isRunning,
@@ -176,7 +176,7 @@ private fun SimulationSettingsControls(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("ロシュ限界:", color = Color.White)
+            Text("ロシュ限界:")
             Spacer(modifier = Modifier.width(8.dp))
             Switch(
                 checked = isRocheLimitEnabled,
@@ -187,7 +187,7 @@ private fun SimulationSettingsControls(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("軌跡:", color = Color.White)
+            Text("軌跡:")
             Spacer(modifier = Modifier.width(8.dp))
             Switch(
                 checked = isTrailEnabled,
@@ -219,7 +219,7 @@ private fun SimulationCanvas(
 
 private fun DrawScope.drawBackground(converter: CoordinateConverter) {
     val gridSize = 50
-    val gridColor = Color.White.copy(alpha = 0.6f)
+    val gridColor = Color.Black.copy(alpha = 0.6f)
 
     for (x in 0..CoordinateConverter.SIMULATION_WIDTH step gridSize) {
         val start = converter.simToScreen(x = x.toDouble(), y = 0.0)
