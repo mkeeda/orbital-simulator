@@ -24,7 +24,7 @@ data class CelestialBody(
     }
 
     fun applyForce(fx: Float, fy: Float, deltaTime: Float): CelestialBody {
-        // 加速度を計算 a = f * m
+        // 加速度を計算 a = f / m
         // 加速度から速度vを計算 v = a * t
         return copy(
             velocityX = velocityX + (fx / mass) * deltaTime,
