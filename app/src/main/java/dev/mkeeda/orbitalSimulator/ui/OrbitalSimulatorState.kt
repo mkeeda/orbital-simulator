@@ -41,10 +41,9 @@ class OrbitalSimulatorState {
         }
 
         // 各天体に働く重力を計算
-        val updatedBodies = mutableListOf<CelestialBody>()
+        val gravityAppliedBodies = mutableListOf<CelestialBody>()
 
         for (i in bodies.indices) {
-
             var fx = 0.0f
             var fy = 0.0f
 
@@ -64,11 +63,11 @@ class OrbitalSimulatorState {
             }
 
             // 力を適用して速度を更新
-            updatedBodies.add(bodies[i].applyForce(fx, fy, deltaTime))
+            gravityAppliedBodies.add(bodies[i].applyForce(fx, fy, deltaTime))
         }
 
         // 位置を更新
-        bodies = updatedBodies.map { it.updatePosition(deltaTime) }
+        bodies = gravityAppliedBodies.map { it.updatePosition(deltaTime) }
 
         // 軌跡を更新
         if (isTrailEnabled) {
